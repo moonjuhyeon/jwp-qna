@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Station {
@@ -24,11 +25,19 @@ public class Station {
 	@JoinColumn(name = "line_id")
 	private Line line;
 
+	@OneToOne(mappedBy = "station")
+	private LineStation lineStation;
+
 	protected Station() {
 	}
 
 	public Station(final String name) {
 		this.name = name;
+	}
+
+	public Station(String name, LineStation lineStation) {
+		this.name = name;
+		this.lineStation = lineStation;
 	}
 
 	public String getName() {
@@ -51,6 +60,14 @@ public class Station {
 		line.getStations().add(this);
 	}
 
+	public LineStation getLineStation() {
+		return lineStation;
+	}
+
+	public void changeName(final String name) {
+		this.name = name;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)
@@ -64,9 +81,5 @@ public class Station {
 	@Override
 	public int hashCode() {
 		return Objects.hash(id, name);
-	}
-
-	public void changeName(final String name) {
-		this.name = name;
 	}
 }
